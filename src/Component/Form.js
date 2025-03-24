@@ -206,7 +206,13 @@ const Formcomponent = () => {
         i18next.changeLanguage(data.lang ?? "en");
 
       } else {
-        api.error({ message: t(response.message) });
+        // api.error({ message: t(response.message) });
+        api.error({
+          key: "error",
+          message: t(response.message),
+          duration: 2,
+          placement: "bottomLeft",
+        })
       }
     });
   };
@@ -236,12 +242,24 @@ const Formcomponent = () => {
       { key: licenseDetails.key, renew_key: renewKey, type: "renew" },
       (response) => {
         if (response.status == true) {
-          api.success({ message: response.message });
+          // api.success({ message: response.message });
+          api.success({
+            key: "success",
+            message: t(response.message),
+            duration: 2,
+            placement: "bottomLeft",
+          })
+
           setTimeout(() => {
             renewCloseForm();
           }, 500);
         } else {
-          api.error({ message: t(response.message) });
+          api.error({
+            key: "error",
+            message: t(response.message),
+            duration: 2,
+            placement: "bottomLeft",
+          })
         }
       }
     );
@@ -254,7 +272,7 @@ const Formcomponent = () => {
         setIsLicenseValid(true);
         setLicenseMessage("");
       } else {
-        setIsLicenseValid(true);
+        setIsLicenseValid(false);
         setLicenseDetails(null);
         setLicenseMessage(response.message);
       }
@@ -332,7 +350,7 @@ const Formcomponent = () => {
   }
 
   const onActivateSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     setShowValidation(true);
 
@@ -360,6 +378,12 @@ const Formcomponent = () => {
         setIsLicenseValid(true);
         getLicenseDetails();
         // api.success({ message: t(response.message) });
+        api.success({
+          key: "success",
+          message: t(response.message),
+          duration: 2,
+          placement: "bottomLeft",
+        })
       } else {
         setIsLicenseValid(true);
         // api.error({ message: t(response.message) });
@@ -386,10 +410,22 @@ const Formcomponent = () => {
     };
     sendChromeMessage({ setting: data, type: "save_setting" }, (response) => {
       if (response.status) {
-        api.success({ message: t("settingSave") });
+        // api.success({ message: t("settingSave") });
+        api.success({
+          key: "success",
+          message: t(response.message),
+          duration: 2,
+          placement: "bottomLeft",
+        })
         i18next.changeLanguage(selectLang);
       } else {
-        api.error({ message: t("settingSaveFailed") });
+        // api.error({ message: t("settingSaveFailed") });
+        api.error({
+          key: "error",
+          message: t(response.message),
+          duration: 2,
+          placement: "bottomLeft",
+        })
       }
     });
   };
@@ -398,14 +434,32 @@ const Formcomponent = () => {
     e.preventDefault();
     setShowValidation(true);
     if (ypLink == "") {
-      return api.error({ message: t("urlRequired") });
+      // return api.error({ message: t("urlRequired") });
+      api.error({
+        key: "error",
+        message: t(response.message),
+        duration: 2,
+        placement: "bottomLeft",
+      })
     }
 
     sendChromeMessage({ keyword: ypLink, type: "scrap" }, (response) => {
       if (response.status == true) {
-        api.success({ message: t(response.message) });
+        // api.success({ message: t(response.message) });
+        api.success({
+          key: "success",
+          message: t(response.message),
+          duration: 2,
+          placement: "bottomLeft",
+        })
       } else {
-        api.error({ message: t(response.message) });
+        // api.error({ message: t(response.message) });
+        api.error({
+          key: "error",
+          message: t(response.message),
+          duration: 2,
+          placement: "bottomLeft",
+        })
       }
     });
   };
@@ -415,10 +469,22 @@ const Formcomponent = () => {
       { type: "download", keyword: selectedKeywordId },
       (response) => {
         if (response.status == true) {
-          api.success({ message: t(response.message) });
+          // api.success({ message: t(response.message) });
+          api.success({
+            key: "success",
+            message: t(response.message),
+            duration: 2,
+            placement: "bottomLeft",
+          })
           setSelectedKeywordId("select");
         } else {
-          api.error({ message: t(response.message) });
+          // api.error({ message: t(response.message) });
+          api.error({
+            key: "error",
+            message: t(response.message),
+            duration: 2,
+            placement: "bottomLeft",
+          })
         }
       }
     );
@@ -429,11 +495,23 @@ const Formcomponent = () => {
       { type: "delete_scrap", keyword: selectedKeywordId },
       (response) => {
         if (response.status == true) {
-          api.success({ message: t(response.message) });
+          // api.success({ message: t(response.message) });
+          api.success({
+            key: "success",
+            message: t(response.message),
+            duration: 2,
+            placement: "bottomLeft",
+          })
           setSelectedKeywordId("select");
           getScrapeData();
         } else {
-          api.error({ message: t(response.message) });
+          // api.error({ message: t(response.message) });
+          api.error({
+            key: "error",
+            message: t(response.message),
+            duration: 2,
+            placement: "bottomLeft",
+          })
         }
       }
     );
@@ -445,10 +523,22 @@ const Formcomponent = () => {
       (response) => {
 
         if (response.status == true) {
-          enqueueSnackbar(t(response.message), { variant: "success" });
+          // enqueueSnackbar(t(response.message), { variant: "success" });
+          api.success({
+            key: "success",
+            message: t(response.message),
+            duration: 2,
+            placement: "bottomLeft",
+          })
           setScrapData({});
         } else {
-          enqueueSnackbar(t(response.message));
+          // enqueueSnackbar(t(response.message));
+          api.error({
+            key: "error",
+            message: t(response.message),
+            duration: 2,
+            placement: "bottomLeft",
+          })
         }
       }
     );
@@ -490,10 +580,22 @@ const Formcomponent = () => {
       console.log("get one day trial demo", response)
       if (response.status) {
         setKey(response.key)
-        api.success({ message: response.message });
+        // api.success({ message: response.message });
+        api.success({
+          key: "success",
+          message: t(response.message),
+          duration: 2,
+          placement: "bottomLeft",
+        })
       } else {
         setKey(response.key)
-        api.error({ message: response.message });
+        // api.error({ message: response.message });
+        api.error({
+          key: "error",
+          message: t(response.message),
+          duration: 2,
+          placement: "bottomLeft",
+        })
       }
 
     })
@@ -599,9 +701,8 @@ const Formcomponent = () => {
         </div>
 
         {isLoading ? (
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-            <Spin />
-            <Text style={{ marginLeft: 8 }}>{t("loading")}</Text>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+            <Spin tip={t("loading")} />
           </div>
         ) : (
           <div>
@@ -809,7 +910,7 @@ const Formcomponent = () => {
                   )}
 
                   {selectedTabId === 3 && (
-                    <div style={{ padding: "24px", marginTop: "-29px"}}>
+                    <div style={{ padding: "24px", marginTop: "-29px" }}>
                       <Title level={5}>{t("helpMsg")}</Title>
                       <Text style={{ fontSize: "0.8rem" }}>{t("contactWithEmail")}</Text>
                       <List>
@@ -875,7 +976,7 @@ const Formcomponent = () => {
                           </>
                         )}
                       </List>
-                      <Title level={5} style={{marginTop: "3px"}}>{t("disclaimer")}:</Title>
+                      <Title level={5} style={{ marginTop: "3px" }}>{t("disclaimer")}:</Title>
                       <Text style={{ fontSize: "0.8rem" }}>{t("ypCertified")}</Text>
                     </div>
                   )}
@@ -890,15 +991,12 @@ const Formcomponent = () => {
                 form={form}
                 style={{ padding: 12, maxWidth: 400, margin: "0 auto" }}
                 layout="vertical"
-                onFinish={() => {
-                  form.validateFields().then(onActivateSubmit);
-                }} // Handles form submission
+                onFinish={onActivateSubmit} // Handles form submission
               >
                 {/* Name */}
                 <Form.Item name="name" rules={[{ required: true, message: t("nameRequired") }]}>
-                  <Input prefix={<VscAccount style={{ fontSize: "1.2rem" }} />} placeholder={t("enterName")} />
+                  <Input value={name} onChange={(e) => setName(e.target.value)} prefix={<VscAccount style={{ fontSize: "1.2rem" }} />} placeholder={t("enterName")} />
                 </Form.Item>
-
                 {/* Email */}
                 <Form.Item
                   name="email"
@@ -907,58 +1005,44 @@ const Formcomponent = () => {
                     { type: "email", message: t("emailInvalid") }
                   ]}
                 >
-                  <Input prefix={<MailOutlined />} placeholder={t("enterEmail")} />
+                  <Input value={email} onChange={(e) => setEmail(e.target.value)} prefix={<MailOutlined />} placeholder={t("enterEmail")} />
                 </Form.Item>
-
                 {/* Phone */}
                 <Form.Item name="phone" rules={[{ required: true, message: t("phoneRequired") }]}>
-                  <PhoneInput country={"in"} inputStyle={{ width: "100%" }} />
+                  <PhoneInput value={phone} onChange={(phone) => setPhone(phone)} country={"in"} inputStyle={{ width: "100%" }} />
                 </Form.Item>
-
                 {/* City */}
                 <Form.Item name="city" rules={[{ required: true, message: t("cityRequired") }]}>
-                  <Input prefix={<IoHomeOutline style={{ fontSize: "1.2rem" }} />} placeholder={t("enterCity")} />
+                  <Input value={city} onChange={(e) => setCity(e.target.value)} prefix={<IoHomeOutline style={{ fontSize: "1.2rem" }} />} placeholder={t("enterCity")} />
                 </Form.Item>
-
                 {/* Country */}
                 <Form.Item name="country" rules={[{ required: true, message: t("selectCountry") }]}>
                   {/* <IoLocationOutline style={{ fontSize: "1.2rem" }} /> */}
-
-                  <Select prefix={<IoLocationOutline style={{ fontSize: "1.2rem" }} />} placeholder={t("selectCountry")} showSearch>
+                  <Select value={country} onChange={(value) => setCountry(value)} prefix={<IoLocationOutline style={{ fontSize: "1.2rem" }} />} placeholder={t("selectCountry")} showSearch>
                     {countryList.map((x) => (
-                      <Option key={x.countryCode} value={x.countryNameEn}>
+                      <Option key={x.countryCode}
+                        value={x.countryNameEn}
+                        label={x.countryNameEn}>
                         {x.countryNameEn}
                       </Option>
                     ))}
                   </Select>
                 </Form.Item>
-
-
                 {/* License Key */}
                 <Form.Item
                   name="key"
                   rules={[
                     { required: true, message: t("enterLicenseKey") },
-                    () => ({
-                      validator(_, value) {
-                        if (!value || keyIsValid) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(new Error(licenceKeyErrorMessage));
-                      },
-                    }),
                   ]}
                 >
-                  <Input prefix={<MdKey style={{ fontSize: "1.2rem" }} />} suffix={keyIsValid ? <CheckCircleOutlined /> : <CloseCircleOutlined />} placeholder={t("enterLicenseKey")} />
+                  <Input value={key} onChange={(e) => setKey(e.target.value)} prefix={<MdKey style={{ fontSize: "1.2rem" }} />} suffix={keyIsValid ? <CheckCircleOutlined /> : <CloseCircleOutlined />} placeholder={t("enterLicenseKey")} />
                 </Form.Item>
-
                 {/* Get Trial */}
                 <Form.Item style={{ textAlign: "right", marginTop: "-10px" }}>
                   <Text style={{ cursor: "pointer" }} onClick={getTrial}>
                     {t("getTrial")}
                   </Text>
                 </Form.Item>
-
                 {/* Buttons */}
                 <Flex justify="center">
                   <Space>
