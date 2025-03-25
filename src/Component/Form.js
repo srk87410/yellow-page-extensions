@@ -238,33 +238,30 @@ const Formcomponent = () => {
   };
 
   const renewLicenseKey = () => {
-    sendChromeMessage(
-      { key: licenseDetails.key, renew_key: renewKey, type: "renew" },
-      (response) => {
-        if (response.status == true) {
-          // api.success({ message: response.message });
-          api.success({
-            key: "success",
-            message: t(response.message),
-            duration: 2,
-            placement: "bottomLeft",
-          })
-
-          setTimeout(() => {
-            renewCloseForm();
-          }, 500);
-        } else {
-          api.error({
-            key: "error",
-            message: t(response.message),
-            duration: 2,
-            placement: "bottomLeft",
-          })
-        }
+    let renewKeyData = {
+      key: licenseDetails.key ?? '',
+      renew_key: renewKey
+    }
+    sendChromeMessage({ renew_key: renewKeyData, type: "renew" }, (response) => {
+      if (response.status == true) {
+        api.success({
+          key: "error",
+          message: response.message,
+          duration: 2,
+          placement: "bottomLeft",
+        })
+        setTimeout(() => { renewCloseForm() }, 500)
+      } else {
+        // enqueueSnackbar(response.message, { variant: "error" });
+        api.error({
+          key: "error",
+          message: response.message,
+          duration: 2,
+          placement: "bottomLeft",
+        })
       }
-    );
-  };
-
+    })
+  }
   const getLicenseDetails = () => {
     sendChromeMessage({ type: "get_details" }, (response) => {
       console.log("get_Details", response)
@@ -272,7 +269,7 @@ const Formcomponent = () => {
         setIsLicenseValid(true);
         setLicenseMessage("");
       } else {
-        setIsLicenseValid(false);
+        setIsLicenseValid(true);
         setLicenseDetails(null);
         setLicenseMessage(response.message);
       }
@@ -648,9 +645,10 @@ const Formcomponent = () => {
           open={renewOpen}
           onCancel={renewCloseForm}
           footer={[
-            <Button key="renew" type="primary" onClick={renewLicenseKey}>
+            <Button key="renew" type="primary" htmlType="submit" onClick={renewLicenseKey}>
               {t("renew")}
-            </Button>,
+            </Button>
+            ,
             product && rData?.active_shop ? (
               <Button key="buy">
                 <AntLink href={product?.siteUrl || rData?.buy_url} target="_blank">
@@ -690,7 +688,7 @@ const Formcomponent = () => {
             <Text style={{ color: "white" }}>{rData?.name ?? t("yp")}</Text>
           </Space>
           {isLicenseValid && (
-            <Space direction="horizontal" align="center" style={{ marginTop: 8, justifyContent: "center", width: "100%" }}>
+            <Space direction="horizontal" align="center" style={{ marginTop: "0px", justifyContent: "center", width: "100%" }}>
               <Text style={{ color: "white" }}>{t("expireDate")}</Text>
               <Tag bordered color="#17F8F0">{expireDate()}</Tag>
               <Tag bordered style={{ backgroundColor: "white" }} onClick={renewOpenForm}>
@@ -723,21 +721,25 @@ const Formcomponent = () => {
                 <div style={{ backgroundColor: theme.token.colorPrimary }}>
                   <Row justify="center" align="middle" style={{ padding: "8px 10px" }}>
                     {TAB_ITEMS.map((x, i) => (
-                      <Col span={6} key={`tab-${i}`}>
+                      <Col span={6} key={`tab-${i}`} style={{ display: "flex", justifyContent: "center" }}>
                         <Button
                           type={selectedTabId === i ? "default" : "text"}
                           style={{
                             color: selectedTabId === i ? theme.token.colorText : "white",
+                            minWidth: "100px",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
                           }}
                           onClick={() => setSelectedTabId(i)}
                         >
                           {t(x)}
                         </Button>
-
                       </Col>
                     ))}
                   </Row>
                 </div>
+
 
                 <div className="mainBox">
                   {selectedTabId === 0 && (
@@ -775,7 +777,7 @@ const Formcomponent = () => {
                                 <AntLink href={product.demoVideoUrl ?? ""} target="_blank">
                                   <div style={{ position: "relative" }}>
                                     <PlayCircleOutlined style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontSize: 110, color: "grey", opacity: 0.8 }} />
-                                    <img src={get_youtube_thumbnail(product.demoVideoUrl ?? "", "high")} alt={product.demoVideoUrl ?? ""} style={{ height: 190, width: 355 }} />
+                                    <img src={get_youtube_thumbnail(product.demoVideoUrl ?? "", "high")} alt={product.demoVideoUrl ?? ""} style={{ height: 174, width: 355, marginTop: "-4px" }} />
                                   </div>
                                 </AntLink>
                               )}
@@ -850,7 +852,8 @@ const Formcomponent = () => {
                     <div style={{ padding: 24 }}>
                       <form onSubmit={onSaveSetting}>
                         <Form layout="vertical">
-                          <Form.Item label={t("removeDuplicate")}>
+                          <Form.Item label={t("removeDuplicate")}
+                            labelCol={{ style: { fontWeight: "bold" } }}>
                             <Select value={removeDuplicate} onChange={(value) => setRemoveDuplicate(value)}>
                               <Option value="only_phone">{t("onlyPhone")}</Option>
                               <Option value="only_address">{t("onlyAddress")}</Option>
@@ -859,12 +862,14 @@ const Formcomponent = () => {
                           </Form.Item>
                           <Row gutter={16}>
                             <Col span={12}>
-                              <Form.Item label={t("delay")}>
+                              <Form.Item label={t("delay")}
+                                labelCol={{ style: { fontWeight: "bold" } }}>
                                 <Input type="number" value={delay} onChange={(e) => setDelay(e.target.value)} min={1} />
                               </Form.Item>
                             </Col>
                             <Col span={12}>
-                              <Form.Item label={t("language")}>
+                              <Form.Item label={t("language")}
+                                labelCol={{ style: { fontWeight: "bold" } }}>
                                 <Select
                                   value={selectLang}
                                   onChange={setSelectLang}
@@ -982,9 +987,13 @@ const Formcomponent = () => {
                   )}
                 </div>
 
-                <Space style={{ marginTop: 16, width: "100%", justifyContent: "center" }}>
-                  <Text>{`V ${localmanifestVersion?.localVersion ?? ""}`}</Text>
-                </Space>
+                <div style={{ position: "absolute", bottom: 0, width: "100%", textAlign: "center" }}>
+                  <Row justify="center" align="middle">
+                    <Typography.Text type="secondary">
+                      {`V ${localmanifestVersion?.localVersion ?? ""}`}
+                    </Typography.Text>
+                  </Row>
+                </div>
               </>
             ) : (
               <Form
