@@ -43,7 +43,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import countryList from "../countryList.json";
 import langList from "../lang.json";
-import logo from "../images/logo.png";
+import logo1 from "../images/logo1.png";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { VscAccount } from "react-icons/vsc";
@@ -191,7 +191,7 @@ const Formcomponent = () => {
       }
     });
   };
-
+  
   const getSetting = () => {
     sendChromeMessage({ type: "get_setting" }, (response) => {
 
@@ -238,30 +238,37 @@ const Formcomponent = () => {
   };
 
   const renewLicenseKey = () => {
+    console.log("renewLicenseKey function called!"); // Debugging step
+    
     let renewKeyData = {
-      key: licenseDetails.key ?? '',
+      key: licenseDetails?.key ?? '',
       renew_key: renewKey
-    }
+    };
+  
+    console.log("Sending message:", { renew_key: renewKeyData, type: "renew" }); // Debugging step
+  
     sendChromeMessage({ renew_key: renewKeyData, type: "renew" }, (response) => {
-      if (response.status == true) {
+      console.log("Response received:", response); // Debugging step
+  
+      if (response?.status === true) {
         api.success({
-          key: "error",
+          key: "success",
           message: response.message,
           duration: 2,
           placement: "bottomLeft",
-        })
-        setTimeout(() => { renewCloseForm() }, 500)
+        });
+        setTimeout(() => renewCloseForm(), 500);
       } else {
-        // enqueueSnackbar(response.message, { variant: "error" });
         api.error({
           key: "error",
           message: response.message,
           duration: 2,
           placement: "bottomLeft",
-        })
+        });
       }
-    })
-  }
+    });
+  };
+  
   const getLicenseDetails = () => {
     sendChromeMessage({ type: "get_details" }, (response) => {
       console.log("get_Details", response)
@@ -269,7 +276,7 @@ const Formcomponent = () => {
         setIsLicenseValid(true);
         setLicenseMessage("");
       } else {
-        setIsLicenseValid(true);
+        setIsLicenseValid(false);
         setLicenseDetails(null);
         setLicenseMessage(response.message);
       }
@@ -632,10 +639,8 @@ const Formcomponent = () => {
         count++;
       }
     }
-
     return count;
   };
-
   return (
     <>
       {contextHolder}
@@ -680,11 +685,11 @@ const Formcomponent = () => {
             width: "100%",
             height: 100,
             backgroundColor: theme.token.colorPrimary,
-            opacity: 0.9,
+            opacity: 0.7,
           }}
         >
           <Space direction="horizontal" align="center" style={{ padding: "8px", width: "100%", justifyContent: "center" }}>
-            <img width={45} height={45} src={logo} alt={product?.name ?? ""} />
+            <img width={45} height={45} src={logo1} alt={product?.name ?? ""} />
             <Text style={{ color: "white" }}>{rData?.name ?? t("yp")}</Text>
           </Space>
           {isLicenseValid && (
