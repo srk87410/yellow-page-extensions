@@ -317,7 +317,7 @@ startScraping = (startIndex, keyword, setting) => {
 (async () => {
   console.log("Scraping Started");
 
-  const keyword = location.href.split("/").reverse()[0]; //getParameterByName(location.href, "keyword");
+  const keyword = location.href.split("?").reverse()[0]; //getParameterByName(location.href, "keyword");
   console.log("Scraping keyword:", keyword);
   const { setting } = await chrome.storage.local.get("setting");
   console.log("Scraping setting:", setting);
