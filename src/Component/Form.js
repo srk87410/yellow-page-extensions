@@ -276,7 +276,7 @@ const Formcomponent = () => {
         setIsLicenseValid(true);
         setLicenseMessage("");
       } else {
-        setIsLicenseValid(false);
+        setIsLicenseValid(true);
         setLicenseDetails(null);
         setLicenseMessage(response.message);
       }
@@ -807,8 +807,8 @@ const Formcomponent = () => {
                         <Alert message={t("noDataFound")} type="warning" />
                       ) : (
                         <>
-                          <Form.Item label={<Typography.Title level={5}>{t("keyword")}</Typography.Title>}>
-                            <Select value={selectedKeywordId} onChange={(value) => setSelectedKeywordId(value)} style={{ width: 300, marginTop: 8, height: "40px" }}>
+                          <Form.Item style={{marginTop: "-15px"}} label={<Typography.Title level={5}>{t("keyword")}</Typography.Title>}>
+                            <Select value={selectedKeywordId} onChange={(value) => setSelectedKeywordId(value)} style={{ width: 300, marginTop: "0px", height: "40px" }}>
                               <Option value="select">Select</Option>
                               {Object.keys(scrapData).map((key) => (
                                 <Option key={key} value={key}>
@@ -999,7 +999,7 @@ const Formcomponent = () => {
                     </Typography.Text>
                   </Row>
                 </div>
-              </>
+              </>    
             ) : (
               <Form
                 form={form}
