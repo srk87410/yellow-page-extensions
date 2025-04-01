@@ -43,7 +43,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import countryList from "../countryList.json";
 import langList from "../lang.json";
-import logo1 from "../images/logo1.png";
+import logo from "../images/logo.png";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { VscAccount } from "react-icons/vsc";
@@ -276,7 +276,7 @@ const Formcomponent = () => {
         setIsLicenseValid(true);
         setLicenseMessage("");
       } else {
-        setIsLicenseValid(false);
+        setIsLicenseValid(true);
         setLicenseDetails(null);
         setLicenseMessage(response.message);
       }
@@ -473,7 +473,6 @@ const Formcomponent = () => {
       { type: "download", keyword: selectedKeywordId },
       (response) => {
         if (response.status == true) {
-          // api.success({ message: t(response.message) });
           api.success({
             key: "success",
             message: t(response.message),
@@ -482,7 +481,6 @@ const Formcomponent = () => {
           })
           setSelectedKeywordId("select");
         } else {
-          // api.error({ message: t(response.message) });
           api.error({
             key: "error",
             message: t(response.message),
@@ -689,7 +687,7 @@ const Formcomponent = () => {
           }}
         >
           <Space direction="horizontal" align="center" style={{ padding: "8px", width: "100%", justifyContent: "center" }}>
-            <img width={45} height={45} src={logo1} alt={product?.name ?? ""} />
+            <img width={45} height={45} src={logo} alt={product?.name ?? ""} />
             <Text style={{ color: "white" }}>{rData?.name ?? t("yp")}</Text>
           </Space>
           {isLicenseValid && (
