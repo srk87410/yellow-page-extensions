@@ -316,18 +316,8 @@ startScraping = (startIndex, keyword, setting) => {
 
 (async () => {
   console.log("Scraping Started");
-  // var currentUrl = location.href;
-  // var urlObject = new URL(currentUrl);
-  // urlObject.searchParams.delete("page");
-  // var updatedUrl = urlObject.toString();
-  // console.log("updatedUrl------", updatedUrl);
-  // var match = currentUrl.match(/&page=(\d+)/);
-  // var pageNumber1 = "";
-  // if (match) {
-  //   pageNumber1 = match[1];
-  //   console.log("Page Number____+++:", pageNumber1);
-  // }
-  const keyword = location.href.split("?").reverse()[0]; //getParameterByName(location.href, "keyword");
+
+  const keyword = location.href.split("/").reverse()[0]; //getParameterByName(location.href, "keyword");
   console.log("Scraping keyword:", keyword);
   const { setting } = await chrome.storage.local.get("setting");
   console.log("Scraping setting:", setting);
@@ -336,51 +326,41 @@ startScraping = (startIndex, keyword, setting) => {
   var scrapingIndex = 0;
 
   while (!isDone) {
-    const result = await startScraping(scrapingIndex, keyword, setting);
+
+    const result = await startScraping(scrapingIndex,keyword, setting);
     scrapingIndex = result;
 
-    console.log("startScraping response:", result);
+   
+   
+
+
+    console.log("startScraping response:",result)
 
     if (!result) {
       isDone = true;
     } else {
+
       //next page
 
+    
+
       try {
-        let items = document.querySelectorAll(".info-section");
-        console.log("startScraping current Items:", items.length);
-        if (items.length > scrapingIndex) {
+
+        let items = document.querySelectorAll(
+          ".resultbox"
+        );
+
+        console.log("startScraping current Items:",items.length)
+
+        if (
+          items.length > scrapingIndex
+        ) {
           console.log("next cards found");
           //await timeout(2000);
           //await timeout((setting.delay ?? 1) * 1000);
         } else {
-          var currentUrl = location.href;
-          var urlObject = new URL(currentUrl);
-          urlObject.searchParams.delete("page");
-          var updatedUrl = urlObject.toString();
-          console.log("updatedUrl------", updatedUrl);
-          var match = currentUrl.match(/&page=(\d+)/);
-          var pageNumber = "1";
-          if (match) {
-            pageNumber = match[1];
-            console.log("Page Number____+++:", pageNumber);
-          }
-          var lastPageNo = parseInt(pageNumber, 10) + 1;
-          if (currentUrl) {
-            window.location.href = urlObject + "&page=" + lastPageNo;
-            console.log(" window.location.href", window.location.href);
-          } else {
-            window.location.href = urlObject;
-          }
+          console.log("next cards not found");
           isDone = true;
-          // let items = document
-          //   .querySelectorAll(".search-term")
-          //   .innerText.split(" ");
-          // console.log("startScraping current Items:", items.length);
-          // if (items.includes("No", "result")) {
-          //   console.log("next cards not found");
-            
-          // }
         }
       } catch (e) {
         console.log(e);
