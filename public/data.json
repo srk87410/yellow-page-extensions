@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "name": "DBM YP Extractor",
     "short_name": "dbm-google-map",
     "author": "Bit Beast Pvt Ltd.",
@@ -22,4 +23,29 @@
     "phone":"",
     "email":"",
     "siteUrl":""
+=======
+        "name": "DBM YP Extractor",
+        "short_name": "dbm-google-map",
+        "author": "Bit Beast Pvt Ltd.",
+        "git_repo": "dbm-google-map",
+        "reseller_id": "",
+        "show_ads": true,
+        "active_shop": true,
+        "buy_url": "https://digibulkmarketing.com/product/google-map-data-extractor/?attribute_pa_validity=1-year&currency=INR",
+        "theme": "dark",
+        "theme_setting": {
+            "primary-color": "#181D3B"
+        },
+        "instance_limit": 10,
+        "lang": "en",
+        "country": "IN",
+        "country_code": 91,
+        "logo": "logo.png",
+        "logo_long": "logo-long.png",
+        "app_logo":"icon.png",
+        "renew":true,
+        "phone":"",
+        "email":"",
+        "siteUrl":""
+>>>>>>> 26e553c95e3be163623f0e5807a0abb390e1788f
 }
