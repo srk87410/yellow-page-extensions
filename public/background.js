@@ -617,6 +617,7 @@ const loadRebrandingData = async () => {
       })
         .then((response) => response.json())
         .then((res) => {
+          console.log("responce1",res)
           resolve(res);
         })
         .catch((err) => {

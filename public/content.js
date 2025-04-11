@@ -148,11 +148,11 @@ scrapCurrentPage = (index) => {
         business = business.slice(0, -2);
         console.log("business++++", business);
         data.business = business;
-      } catch {}
+      } catch { }
       try {
         var phone = card.querySelector(".phones");
         data.phone = "";
-      }catch(e){
+      } catch (e) {
         console.log("Error Phone: ", e);
       }
       data.phone = "";
@@ -315,9 +315,8 @@ startScraping = (startIndex, keyword, setting) => {
 };
 
 (async () => {
-  console.log("Scraping Started");
 
-  const keyword = location.href.split("/").reverse()[0]; //getParameterByName(location.href, "keyword");
+  const keyword = location.href.split("?").reverse()[0]; //getParameterByName(location.href, "keyword");
   console.log("Scraping keyword:", keyword);
   const { setting } = await chrome.storage.local.get("setting");
   console.log("Scraping setting:", setting);
@@ -327,30 +326,23 @@ startScraping = (startIndex, keyword, setting) => {
 
   while (!isDone) {
 
-    const result = await startScraping(scrapingIndex,keyword, setting);
+    const result = await startScraping(scrapingIndex, keyword, setting);
     scrapingIndex = result;
 
-   
-   
-
-
-    console.log("startScraping response:",result)
+    console.log("startScraping response:", result)
 
     if (!result) {
       isDone = true;
     } else {
 
       //next page
-
-    
-
       try {
 
         let items = document.querySelectorAll(
           ".resultbox"
         );
 
-        console.log("startScraping current Items:",items.length)
+        console.log("startScraping current Items:", items.length)
 
         if (
           items.length > scrapingIndex
@@ -375,7 +367,8 @@ startScraping = (startIndex, keyword, setting) => {
   });
 
   console.log("Scraping done:", isDone);
-})();
+})(); 
+
 
 (async () => {
   try {
@@ -388,3 +381,4 @@ startScraping = (startIndex, keyword, setting) => {
     console.log(e);
   }
 })();
+

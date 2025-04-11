@@ -97,6 +97,9 @@ const Formcomponent = () => {
   const [localmanifestVersion, setLocalmanifestVersion] = useState("");
   const [isUpdate, setIsUpdate] = useState(false);
 
+
+  console.log("checked date",scrapData[selectedKeywordId]?.createdAt);
+
   const TAB_ITEMS = ["home", "data", "setting", "help"];
   const renewOpenForm = () => {
     setRenewKey("");
@@ -183,6 +186,7 @@ const Formcomponent = () => {
   const getScrapeData = () => {
     sendChromeMessage({ type: "get_scrap" }, (response) => {
 
+      console.log("Scrap Data Response:", response);
       if (response.status == true) {
         const data = response.data;
         setScrapData(data);
@@ -191,7 +195,7 @@ const Formcomponent = () => {
       }
     });
   };
-  
+
   const getSetting = () => {
     sendChromeMessage({ type: "get_setting" }, (response) => {
 
@@ -228,6 +232,7 @@ const Formcomponent = () => {
   };
 
   const dateFormat = (dateString, showTime) => {
+
     let expDate = new Date(dateString);
     let optionsDate = { year: "numeric", month: "long", day: "numeric" };
     //return expDate.toLocaleDateString("en-in", optionsDate)+(showTime? " "+expDate.toLocaleTimeString("en-in"):"");
@@ -236,20 +241,19 @@ const Formcomponent = () => {
     const day = expDate.getUTCDate();
     return `${day}-${month}-${year}`;
   };
-
   const renewLicenseKey = () => {
     console.log("renewLicenseKey function called!"); // Debugging step
-    
+
     let renewKeyData = {
       key: licenseDetails?.key ?? '',
       renew_key: renewKey
     };
-  
+
     console.log("Sending message:", { renew_key: renewKeyData, type: "renew" }); // Debugging step
-  
+
     sendChromeMessage({ renew_key: renewKeyData, type: "renew" }, (response) => {
       console.log("Response received:", response); // Debugging step
-  
+
       if (response?.status === true) {
         api.success({
           key: "success",
@@ -268,10 +272,10 @@ const Formcomponent = () => {
       }
     });
   };
-  
+
   const getLicenseDetails = () => {
     sendChromeMessage({ type: "get_details" }, (response) => {
-      console.log("get_Details", response)
+      console.log("get_details", response);
       if (response.status == true) {
         setIsLicenseValid(true);
         setLicenseMessage("");
@@ -280,10 +284,8 @@ const Formcomponent = () => {
         setLicenseDetails(null);
         setLicenseMessage(response.message);
       }
-
       if (response.detail) {
         setLicenseDetails(response.detail);
-        //fill the form ow
         setName(response.detail.name ?? "");
         setEmail(response.detail.email ?? "");
         setPhone(response.detail.phone ?? "");
@@ -291,7 +293,6 @@ const Formcomponent = () => {
         setCountry(response.detail.country ?? "");
         setKey(response.detail.key ?? "");
       }
-
       setIsLoading(false);
     });
   };
@@ -726,7 +727,7 @@ const Formcomponent = () => {
                 <div style={{ backgroundColor: theme.token.colorPrimary }}>
                   <Row justify="center" align="middle" style={{ padding: "8px 10px" }}>
                     {TAB_ITEMS.map((x, i) => (
-                      <Col span={6} key={`tab-${i}`} style={{ display: "flex", justifyContent: "center" }}>
+                      <Col span={6} key={"tab-" + i} style={{ display: "flex", justifyContent: "center" }}>
                         <Button
                           type={selectedTabId === i ? "default" : "text"}
                           style={{
@@ -748,7 +749,7 @@ const Formcomponent = () => {
 
                 <div className="mainBox">
                   {selectedTabId === 0 && (
-                    <Row justify="center" align="middle">
+                    <Row justify="center">
                       <Col>
                         <form onSubmit={onScrape} style={{ padding: "20px", marginTop: "-27px" }}>
                           <Title level={5}>{t("welcome")} {licenseDetails?.name ?? ""}</Title>
@@ -807,16 +808,20 @@ const Formcomponent = () => {
                         <Alert message={t("noDataFound")} type="warning" />
                       ) : (
                         <>
-                          <Form.Item style={{marginTop: "-15px"}} label={<Typography.Title level={5}>{t("keyword")}</Typography.Title>}>
-                            <Select value={selectedKeywordId} onChange={(value) => setSelectedKeywordId(value)} style={{ width: 300, marginTop: "0px", height: "40px" }}>
+                          <Form.Item style={{ marginTop: "-15px" }} label={<Typography.Title level={5}>{t("keyword")}</Typography.Title>}>
+                            <Select value={selectedKeywordId} onChange={(value) => setSelectedKeywordId(value)} style={{ width: 300, marginTop: "8px", height: "40px" }}>
                               <Option value="select">Select</Option>
                               {Object.keys(scrapData).map((key) => (
+                                scrapData?.[key]?.data?.length > 0 &&
+
+
                                 <Option key={key} value={key}>
                                   {scrapData[key].name}
                                 </Option>
                               ))}
                             </Select>
                           </Form.Item>
+
                           {selectedKeywordId !== "select" && (
                             <>
                               <Space direction="vertical" style={{ marginTop: 16 }}>
@@ -999,7 +1004,7 @@ const Formcomponent = () => {
                     </Typography.Text>
                   </Row>
                 </div>
-              </>    
+              </>
             ) : (
               <Form
                 form={form}
@@ -1052,11 +1057,24 @@ const Formcomponent = () => {
                   <Input value={key} onChange={(e) => setKey(e.target.value)} prefix={<MdKey style={{ fontSize: "1.2rem" }} />} suffix={keyIsValid ? <CheckCircleOutlined /> : <CloseCircleOutlined />} placeholder={t("enterLicenseKey")} />
                 </Form.Item>
                 {/* Get Trial */}
-                <Form.Item style={{ textAlign: "right", marginTop: "-10px" }}>
-                  <Text style={{ cursor: "pointer" }} onClick={getTrial}>
-                    {t("getTrial")}
-                  </Text>
+                <Form.Item
+                  name="key"
+                  validateStatus={!keyIsValid && licenceKeyErrorMessage ? "error" : ""}
+                  help={!keyIsValid && licenceKeyErrorMessage ? licenceKeyErrorMessage : ""}
+                  rules={[{ required: true, message: t("enterLicenseKey") }]}
+                >
+                  <Input
+                    value={key}
+                    onChange={(e) => {
+                      setKey(e.target.value);
+                      checkLicense(e.target.value); // Call checkLicense when user types
+                    }}
+                    prefix={<MdKey style={{ fontSize: "1.2rem" }} />}
+                    suffix={keyIsValid ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
+                    placeholder={t("enterLicenseKey")}
+                  />
                 </Form.Item>
+
                 {/* Buttons */}
                 <Flex justify="center">
                   <Space>
