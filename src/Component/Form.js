@@ -474,7 +474,6 @@ const Formcomponent = () => {
       { type: "download", keyword: selectedKeywordId },
       (response) => {
         if (response.status == true) {
-          // api.success({ message: t(response.message) });
           api.success({
             key: "success",
             message: t(response.message),
@@ -483,7 +482,6 @@ const Formcomponent = () => {
           })
           setSelectedKeywordId("select");
         } else {
-          // api.error({ message: t(response.message) });
           api.error({
             key: "error",
             message: t(response.message),
