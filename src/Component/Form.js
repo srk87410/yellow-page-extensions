@@ -98,7 +98,7 @@ const Formcomponent = () => {
   const [isUpdate, setIsUpdate] = useState(false);
 
 
-  console.log("checked date",scrapData[selectedKeywordId]?.createdAt);
+  console.log("checked date", scrapData[selectedKeywordId]?.createdAt);
 
   const TAB_ITEMS = ["home", "data", "setting", "help"];
   const renewOpenForm = () => {
@@ -280,7 +280,7 @@ const Formcomponent = () => {
         setIsLicenseValid(true);
         setLicenseMessage("");
       } else {
-        setIsLicenseValid(true);
+        setIsLicenseValid(false);
         setLicenseDetails(null);
         setLicenseMessage(response.message);
       }
@@ -1049,30 +1049,47 @@ const Formcomponent = () => {
                 <Form.Item
                   name="key"
                   rules={[
-                    { required: true, message: t("enterLicenseKey") },
+                    {
+                      required: true,
+                      message: t("enterLicenseKey"), // When input is empty
+                    },
                   ]}
-                >
-                  <Input value={key} onChange={(e) => setKey(e.target.value)} prefix={<MdKey style={{ fontSize: "1.2rem" }} />} suffix={keyIsValid ? <CheckCircleOutlined /> : <CloseCircleOutlined />} placeholder={t("enterLicenseKey")} />
-                </Form.Item>
-                {/* Get Trial */}
-                <Form.Item
-                  name="key"
-                  validateStatus={!keyIsValid && licenceKeyErrorMessage ? "error" : ""}
-                  help={!keyIsValid && licenceKeyErrorMessage ? licenceKeyErrorMessage : ""}
-                  rules={[{ required: true, message: t("enterLicenseKey") }]}
+                  validateStatus={
+                    !key ? "" : keyIsValid === false ? "error" : "success"
+                  }
+                  help={
+                    !key
+                      ? null
+                      : keyIsValid === false
+                        ? licenceKeyErrorMessage // e.g., "Invalid license key"
+                        : null
+                  }
                 >
                   <Input
                     value={key}
-                    onChange={(e) => {
-                      setKey(e.target.value);
-                      checkLicense(e.target.value); // Call checkLicense when user types
-                    }}
+                    onChange={(e) => setKey(e.target.value)}
                     prefix={<MdKey style={{ fontSize: "1.2rem" }} />}
-                    suffix={keyIsValid ? <CheckCircleOutlined /> : <CloseCircleOutlined />}
+                    suffix={
+                      key ? (
+                        keyIsValid ? (
+                          <CheckCircleOutlined style={{ color: "green" }} />
+                        ) : (
+                          <CloseCircleOutlined style={{ color: "red" }} />
+                        )
+                      ) : null
+                    }
                     placeholder={t("enterLicenseKey")}
                   />
                 </Form.Item>
 
+
+                {/* Get Trial */}
+
+                <Form.Item style={{ textAlign: "right", marginTop: "-33px" }}>
+                  <Text style={{ cursor: "pointer"}} onClick={getTrial} >
+                    {t("getTrial")}
+                  </Text>
+                </Form.Item>
                 {/* Buttons */}
                 <Flex justify="center">
                   <Space>
